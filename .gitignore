@@ -1,0 +1,8 @@
+.vscode
+requirements.txt
+client.py
+__pycache__
+config.js
+Spacefile
+.space
+venv
