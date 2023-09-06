@@ -1,6 +1,6 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from .BooksAPI.client import MONGO_URL
+from BooksAPI.client import MONGO_URL
 # ? import the pymongo client and serverAPI to connect to the database
 import os
 # ? import os to manipulate the terminal
@@ -404,7 +404,7 @@ while running:
         # * Get the author name.
         # * Get the readed status.
         # * Get the wishlist status.
-        # * Insert the book into the database.
+        # * Insert the book.
 
         os.system('cls')
 
