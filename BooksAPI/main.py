@@ -3,14 +3,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
+from .client import MONGO_URL
 # ? Import the FastAPI librarys to create the views and manage the CORS
 # ? Import the pymongo client and serverAPI to connect to the database
 
 # ! Start the App with FastAPI
 app = FastAPI()
-
-# ? the database string to connect to the db
-MONGO_URL = "mongodb+srv://PabloSSolbal:Pablopicotazo@cluster0.n8i8xdz.mongodb.net/?retryWrites=true&w=majority"
 
 # ? create a client to comunicate to the db
 client = MongoClient(MONGO_URL, server_api=ServerApi('1'))
