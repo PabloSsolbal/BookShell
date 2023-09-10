@@ -1,6 +1,6 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from BooksAPI.client import MONGO_URL
+from bookshell.BooksAPI.client import MONGO_URL
 # ? import the pymongo client and serverAPI to connect to the database
 import os
 # ? import os to manipulate the terminal
