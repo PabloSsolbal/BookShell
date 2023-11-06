@@ -6,8 +6,7 @@
  */
 
 // ? window variables to call the API
-const library = window.library;
-const wishlist = window.wishlist;
+import { library, wishlist } from "./config.js";
 
 // ? elements of the dom that we will use
 /**
