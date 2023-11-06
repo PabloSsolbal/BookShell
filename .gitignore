@@ -6,3 +6,4 @@ config.js
 Spacefile
 .space
 venv
+__init__.py
