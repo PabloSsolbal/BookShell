@@ -10,6 +10,7 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from client import MONGO_URL
+from books import *
 
 
 # Connect to MongoDB
@@ -26,10 +27,7 @@ def get_books():
         Note:
             * If no books are found, it returns a dictionary with a "message" key.
     """
-    books = client.Library.Books.find()
-
-    books = [{"name": book['name'], "author": book["author"]}
-             for book in books]
+    books = BookList(client.Library.Books.find())
 
     return books if books != [] else {"message": "No books found"}
 
@@ -47,15 +45,10 @@ def get_book(name: str):
         Note:
             * If the book is not found, it returns a dictionary with a "message" key.
     """
-    book = client.Library.Books.find_one({"name": str(name)})
 
-    if not book:
-        return {"message": "Book not found"}
+    book = BookFull(client.Library.Books.find_one({"name": str(name)}))
 
-    book = {"name": book["name"], "author": book["author"],
-            "isReaded": book["readed"], "wishList": book["wishList"]}
-
-    return book if book else {"message": "Book not found"}
+    return book if book != {} else {"message": "Book not found"}
 
 
 def get_readed_books():
@@ -68,10 +61,8 @@ def get_readed_books():
         Note:
             * If no read books are found, it returns a dictionary with a "message" key.
     """
-    books = []
 
-    for book in client.Library.Books.find({"readed": True}):
-        books.append({"name": book['name'], "author": book["author"]})
+    books = BookList(client.Library.Books.find({"readed": True}))
 
     return books if books != [] else {"message": "No books found"}
 
@@ -86,10 +77,8 @@ def get_books_to_read():
         Note:
             * If no books to read are found, it returns a dictionary with a "message" key.
     """
-    books = []
-
-    for book in client.Library.Books.find({"readed": False, "wishList": False}):
-        books.append({"name": book['name'], "author": book["author"]})
+    books = BookList(client.Library.Books.find(
+        {"readed": False, "wishList": False}))
 
     return books if books != [] else {"message": "No books found"}
 
@@ -104,12 +93,9 @@ def get_authors():
         Note:
             * If no authors are found, it returns a dictionary with a "message" key.
     """
-    authors = set()
+    authors = Authors(client.Library.Books.find())
 
-    for book in client.Library.Books.find():
-        authors.add(book['author'])
-
-    return list(authors) if authors != [] else {"message": "No authors found"}
+    return authors if authors != [] else {"message": "No authors found"}
 
 
 def get_books_by_author(author: str):
@@ -125,11 +111,7 @@ def get_books_by_author(author: str):
         Note:
             * If no books by the author are found, it returns a dictionary with a "message" key.
     """
-    books = []
-
-    for book in client.Library.Books.find({"author": author}):
-        books.append(
-            {"name": book['name'], "author": book['author'], "isReaded": book['readed']})
+    books = BookSemiList(client.Library.Books.find({"author": author}))
 
     return books if books != [] else {"message": "This author don't has books"}
 
@@ -144,11 +126,7 @@ def get_books_in_library():
         Note:
             * If no books are found in the library, it returns a dictionary with a "message" key.
     """
-    library = []
-
-    for book in client.Library.Books.find({"wishList": False}):
-        library.append(
-            {"name": book['name'], "author": book['author'], "isReaded": book['readed']})
+    library = BookSemiList(client.Library.Books.find({"wishList": False}))
 
     return library if library != [] else {"message": "No books in library"}
 
@@ -163,12 +141,7 @@ def get_books_in_wishlist():
         Note:
             * If no books are found in the wishlist, it returns a dictionary with a "message" key.
     """
-    wishlist = []
-
-    books = client.Library.Books.find({"wishList": True})
-
-    for book in books:
-        wishlist.append({"name": book['name'], "author": book['author']})
+    wishlist = BookList(client.Library.Books.find({"wishList": True}))
 
     return wishlist if wishlist != [] else {"message": "No books in wishlist"}
 
@@ -257,10 +230,7 @@ def get_favorites():
         Note:
             * If no favorite books are found, it returns a dictionary with a "message" key.
     """
-    books = []
-
-    for book in client.Library.Books.find({"favorite": True}):
-        books.append({"name": book['name'], "author": book['author']})
+    books = BookList(client.Library.Books.find({"favorite": True}))
 
     return books if books != [] else {"message": "No books in favorites"}
 

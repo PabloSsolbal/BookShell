@@ -14,12 +14,13 @@
         * - `FastAPI` application with various endpoints for managing the library of books.
         * - Pydantic `BaseModel` class for representing book data.
 """
-from fastapi import FastAPI
+from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 import db_manager
 from pydantic import BaseModel
 import urllib.parse
-from client import description
+from client import description, urls
+from starlette.responses import RedirectResponse
 
 """ 
     ? Configure the app and the CORS
@@ -27,7 +28,7 @@ from client import description
 app = FastAPI(title="BookShell", description=description,
               summary="Personal library management API.", version="0.0.1",)
 
-origins = ["*"]
+origins = urls
 
 app.add_middleware(
     CORSMiddleware,
@@ -58,6 +59,14 @@ class Book(BaseModel):
     readed: bool = False
     wishList: bool = True
     favorite: bool = False
+
+
+@app.get("/", tags=["Default"], status_code=status.HTTP_307_TEMPORARY_REDIRECT)
+def root():
+    """
+        Redirects to the documentation.
+    """
+    return RedirectResponse(url="/docs")
 
 
 @app.get("/books", tags=["Library"])
@@ -166,7 +175,7 @@ def root(author: str):
     return db_manager.get_books_by_author(author)
 
 
-@app.post("/books", tags=["Library"])
+@app.post("/books", tags=["Library"], status_code=status.HTTP_201_CREATED)
 def root(book: Book):
     """
         Create a new book entry in the library.
