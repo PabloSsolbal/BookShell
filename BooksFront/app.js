@@ -1,79 +1,52 @@
 /**
- * ! Creates a list of books app from an API
- * ? This code manages a web application for tracking books in a wishlist and library.
- * * It dynamically fetches data from an API, displays it, and allows user to switch between
- * *  their wishlist and library.
+ * @file
+ * ? This JavaScript file is responsible for managing book data in a web application.
+ * * It fetches book data from specified URLs, displays them in the document, and allows users to switch
+ * * between different book categories, such as "Wishlist" and "Library," by clicking buttons.
+ *
+ * * Features:
+ * * - Fetch book data from remote URLs and display it in the document.
+ * * - Allow users to switch between "Wishlist" and "Library" views using buttons.
+ * * - Dynamically create book elements based on the fetched data.
+ * @author Pablo Solbal <pablossolbal@gmail.com>
+ * @copyright Pablo Solbal 2023
+ * @license Apache License Version 2.0
  */
 
-// ? window variables to call the API
-import { library, wishlist } from "./config.js";
+// ? Import the urls object from the config.js file.
+import { urls } from "./config.js";
 
-// ? elements of the dom that we will use
-/**
- * * title of the page
- * * books container
- * * buttons to change the content
- */
+// * URLs
+let wishlist = urls.wishlist;
+let library = urls.library;
+
+// * DOM elements
 const title = document.querySelector(".title");
 const books = document.querySelector(".books");
 const btns = document.querySelectorAll(".btn");
 
-// ? array to save the current data
-let data = [];
-
-// ? Functions to get the data from the API
 /**
- *  * The function are asynchronous and returns a Promise.
- *  * Make an asynchronous HTTP request
- *  * The response will be a JSON object. Convert it to a JavaScript object
- *  * Store the data in the `data` variable.
- *  * Clear the body of the page. - ClearBody function
- *  * Create a list of books from the data. - CreateBooks function
+ * * Fetch book data from a given URL, clear the current page content, and create book elements with the fetched data.
+ * @param {string} url - The URL from which to fetch book data.
  */
-
-// ? Function to get the wishlist of books
-const getWishlist = async () => {
-  await fetch(wishlist)
-    .then((res) => res.json())
-    .then((res) => {
-      data = res;
-    });
+const getBooksData = async (url) => {
+  const response = await fetch(url);
+  const data = await response.json();
   clearBody();
-  createBooks();
+  createBooks(await data);
 };
 
-// ? Function to get the library of books
-
-const getLibrary = async () => {
-  await fetch(library)
-    .then((res) => res.json())
-    .then((res) => {
-      data = res;
-    });
-  clearBody();
-  createBooks();
-};
-
-// ? Function to create the list of books
 /**
- * * This function creates a list of book items from the data.
- * * Create two empty arrays to store the read and unread books.
- * * Iterate through the data array.
- * * Create a new book item element.
- * * Create two new text elements for the book name and author.
- * * Set the text content of the book name and author elements.
- * * Append the book name and author elements to the book item element.
- *
- * * If the book is not read, add it to the notReadedBooks array.
- * * Else add it to the readedBooks array.
- * * Combine the read and unread books arrays into a single array.
- *
- * * Iterate through the allBooks array and append each book item to the books container.
+ * * Create book elements based on the provided data and append them to the "books" container in the document.
+ * @param {Array} data - An array of book data objects, each containing at least "name," "author," and "isReaded" properties.
  */
-const createBooks = () => {
+const createBooks = (data) => {
+  // ? Separate books into readed and not readed categories
   const readedBooks = [];
   const notReadedBooks = [];
+  const booksFragment = document.createDocumentFragment();
 
+  // ? Iterate through the provided data to create book elements
   data.forEach((book) => {
     const bookItem = document.createElement("div");
     bookItem.classList.add("book");
@@ -98,66 +71,63 @@ const createBooks = () => {
     }
   });
 
-  const allBooks = readedBooks.concat(notReadedBooks);
+  // ? Combine readed and not readed books, then append them to the document fragment, then append to the books container
+  const allBooks = [...readedBooks, ...notReadedBooks];
 
   allBooks.forEach((bookItem) => {
-    books.appendChild(bookItem);
+    booksFragment.appendChild(bookItem);
   });
+
+  books.appendChild(booksFragment);
 };
 
-// ? This function is a starter function that determines which function to call based on the parameter.
 /**
- * * Check the parameter
- * * Change the title of the page.
- * * Call the function that corresponds to the parameter.
+ * ? Change the text content of an HTML element with the id "title."
+ * @param {string} text - The text to set as the new content of the element.
  */
-
-const starter = (func) => {
-  if (func === "wishlist") {
-    title.textContent = "Wishlist";
-    getWishlist();
-  } else if (func === "library") {
-    title.textContent = "Library";
-    getLibrary();
-  }
+const changeTitle = (text) => {
+  title.textContent = text;
 };
 
-// ? This function is a wrapper function that calls the starter function with the specified content.
 /**
- * * Check the parameter
- * * Calls the starter with the func based on parameter
+ * * Change the title text and load books data based on the content provided.
+ * @param {string} content - The content to set as the new title and determine which books data to load (e.g., "Wishlist" or "Library").
  */
-
 const call = (content) => {
+  changeTitle(content);
+
   if (content === "Wishlist") {
-    starter("wishlist");
+    getBooksData(wishlist);
   } else if (content === "Library") {
-    starter("library");
+    getBooksData(library);
   }
 };
 
-// ? Clear the html function -To blank the page before charge the books-
+/**
+ *  ? Clear the html -To blank the page before charge the books-
+ */
 const clearBody = () => {
   books.innerHTML = "";
 };
 
-// ? This function iterates through the btns array and adds an event listener to each button.
 /**
- * * Add an event listener to the button.
- * * Remove the "select" class from all buttons.
- * * Add the "select" class to the clicked button.
- * * Call the call function with the text content of the clicked button.
+ * ? Add a click event listener to the document that responds to button clicks with the class "btn."
+ * * When a button is clicked, it updates the selected button's appearance, and calls the "call" function
+ * with the text content of the clicked button.
+ * @param {Event} e - The click event object.
  */
-btns.forEach((btn) => {
-  btn.addEventListener("click", () => {
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("btn")) {
     btns.forEach((btn) => {
       btn.classList.remove("select");
     });
-    btn.classList.add("select");
+    e.target.classList.add("select");
 
-    call(btn.textContent);
-  });
+    call(e.target.textContent);
+  }
 });
 
-// ? start the app with the wishlist content
-starter("wishlist");
+/**
+ * ? Start the app with the wishlist content
+ */
+call("Wishlist");
