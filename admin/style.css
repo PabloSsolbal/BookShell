@@ -1,0 +1,457 @@
+@import url("https://fonts.googleapis.com/css2?family=Indie+Flower&family=Poppins&display=swap");
+
+:root {
+  --txt-shadow: #00000060;
+  --box-shadow: #00000038;
+  --btn-hover: #00000028;
+  --bg: #fff;
+  --txt: #000000d7;
+  --txt2: #000;
+}
+
+body.DarkTheme {
+  --bg: #000;
+  --txt2: #fff;
+  filter: invert(1);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  text-shadow: 0px 2px 3px var(--txt-shadow);
+}
+
+body {
+  overflow: hidden;
+  width: 100%;
+  height: 100vh;
+  display: grid;
+  grid-template-areas:
+    "Navbar Navbar Navbar Navbar Navbar Navbar Navbar Navbar"
+    "Form   Form   Books  Books  Books  Books  Books  Books"
+    "Form   Form   Books  Books  Books  Books  Books  Books"
+    "Form   Form   Books  Books  Books  Books  Books  Books"
+    "Form   Form   Books  Books  Books  Books  Books  Books"
+    "Form   Form   Books  Books  Books  Books  Books  Books"
+    "Form   Form   Books  Books  Books  Books  Books  Books"
+    "Form   Form   Books  Books  Books  Books  Books  Books";
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: 2.5em repeat(7, 1fr);
+  perspective: 1000px;
+  background-color: var(--bg);
+}
+
+button {
+  border-radius: 15px;
+  border: none;
+  outline: solid var(--bg) 2px;
+  box-shadow: 0px 0px 5px 3px var(--box-shadow);
+  height: 1.8em;
+  font-family: "Poppins", sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.6s ease-in-out;
+}
+input {
+  transition: all 0.5s ease-in;
+}
+input:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+button:hover {
+  transform: scale(1.2);
+  background-color: var(--btn-hover);
+}
+
+button:focus {
+  transform: scale(1.2);
+  background-color: var(--txt-shadow);
+  color: var(--bg);
+}
+
+.NavBar {
+  z-index: 10;
+  grid-area: Navbar;
+  background-color: #ffffff60;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  align-content: center;
+  justify-items: center;
+  box-shadow: 0px 0px 10px 3px var(--txt-shadow);
+  border-radius: 20px;
+  width: 90%;
+  justify-self: center;
+  margin-top: 2.5px;
+}
+.NavBar p {
+  grid-column: 2;
+  font-family: "Poppins";
+  color: var(--txt);
+  font-weight: bold;
+  font-size: 30px;
+  text-shadow: 0px 3px 5px #000;
+}
+
+.NavBar button {
+  width: 50px !important;
+  cursor: pointer;
+  align-self: center;
+  justify-self: center;
+}
+
+#AddBooksForm {
+  grid-area: Form;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+}
+
+.ButtonArea {
+  width: 95%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto;
+  align-items: center;
+  justify-items: center;
+  margin: 10px;
+  gap: 10px;
+}
+
+.ButtonArea button {
+  width: 95%;
+}
+
+.Form,
+.SearchForm,
+.Filter {
+  background-color: #ffffff60;
+  border-radius: 25px;
+  width: 90%;
+  height: fit-content;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  box-shadow: 0px 0px 10px 5px var(--box-shadow);
+  opacity: 0.9;
+  transition: all 0.3s ease-in-out;
+}
+
+.Display {
+  display: flex;
+  animation: fade-in 0.6s ease-in;
+  opacity: 0.8;
+  transform: scale(0.9);
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0.8;
+  }
+}
+
+.Form:hover,
+.SearchForm:hover,
+.Filter:hover {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.SearchForm > p,
+.Form .FormTitle {
+  font-weight: bold;
+  font-size: 18px;
+  font-family: "Poppins", sans-serif;
+}
+.Form > *,
+.ReadOptions > *,
+.SearchForm > *,
+.Filter > * {
+  margin: 3px;
+}
+
+#Filter {
+  margin-bottom: 5px;
+}
+
+#Name,
+#Author,
+#SearchInput,
+#Filter {
+  background-color: var(--bg);
+  color: var(--txt-shadow);
+  box-shadow: 0px 0px 5px 1px var(--txt-shadow), 0px 0px 5px 2px #c9c9c9 inset;
+  text-align: center;
+  border-radius: 20px;
+  height: 2em;
+  width: 90%;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: "Poppins", sans-serif;
+  border: none;
+  outline: solid 2px var(--bg);
+}
+
+.DarkTheme #Name,
+.DarkTheme #Author,
+.DarkTheme #SearchInput,
+.DarkTheme #Filter {
+  color: #ffffff85 !important;
+}
+
+#Name:focus,
+#Author:focus,
+#SearchInput:focus,
+#Filter:focus {
+  color: #000 !important;
+}
+
+.DarkTheme #Name:focus,
+.DarkTheme #Author:focus,
+.DarkTheme #SearchInput:focus,
+.DarkTheme #Filter:focus {
+  color: #fff !important;
+}
+
+label {
+  font-weight: bold;
+  font-size: 18px;
+  font-family: "Poppins", sans-serif;
+}
+
+.ReadOptions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ReadedOptions,
+.WishListOptions,
+.TypeOfSearch {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.ReadOptions button,
+.TypeOfSearch button {
+  width: 40%;
+  color: var(--txt-shadow);
+}
+
+.ReadOptions p {
+  font-family: "Poppins", sans-serif;
+  font-weight: bold;
+}
+
+.SelectedR,
+.SelectedW,
+.SelectedS {
+  color: #000 !important;
+}
+
+.AddBook,
+.SearchBy {
+  width: 50%;
+  margin: 10px;
+}
+
+#ButtonsArea {
+  grid-area: Buttons;
+}
+
+#ViewBooksArea {
+  z-index: 5;
+  grid-area: Books;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  margin: 5px;
+}
+
+.Books {
+  width: 100%;
+  height: fit-content;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  padding: 5px;
+  border-radius: 20px;
+  box-shadow: 0px 0px 5px 1px var(--txt-shadow) inset;
+  overflow-x: hidden;
+}
+
+.Books.Authors {
+  display: grid;
+  gap: 2px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto;
+  align-content: start;
+  justify-items: center;
+}
+
+.Book {
+  width: 96%;
+  font-size: 12px;
+  height: fit-content !important;
+  box-shadow: 0px 0px 5px 1px var(--txt-shadow);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  border-radius: 15px;
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  padding: 2px;
+  animation: fade-in 0.4s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+
+.Book:hover {
+  z-index: 1000;
+  transform: scale(1.05);
+  background-color: var(--btn-hover);
+}
+
+.Books.Authors .Book {
+  grid-template-columns: repeat(2, 1fr);
+  overflow: visible;
+}
+
+/*
+ ? Book name style for readed and not readed
+*/
+.Name,
+.ErrorMessage {
+  height: fit-content;
+  text-align: left;
+  margin-left: 10px;
+  margin-right: 3px;
+  font-weight: bolder;
+}
+.Title {
+  height: fit-content;
+  font-size: 18px;
+  margin: 2px;
+  font-weight: bold;
+  font-family: "Poppins", sans-serif;
+  text-align: center;
+}
+
+.Book.NotReaded .Name {
+  color: var(--txt-shadow);
+}
+
+/*
+ ? Author name style
+*/
+.Author {
+  height: fit-content;
+  text-align: right;
+  margin-right: 10px;
+}
+
+.Author:hover {
+  font-weight: bold;
+}
+
+.Actions {
+  width: 100%;
+  display: flex;
+  height: fit-content;
+  justify-self: space-between;
+  align-self: center;
+  margin: 2px;
+}
+
+.Actions > * {
+  margin: 0 5px;
+}
+
+.DeleteBook,
+.GetByAuthor,
+.FavoriteBook,
+.OutWishList,
+.ReadBook,
+.UnreadBook,
+.UnFavoriteBook,
+.InWishList {
+  height: 1.5em;
+  width: 30%;
+}
+
+.DeleteBook {
+  order: 0;
+}
+.UnreadBook,
+.ReadBook {
+  order: 1;
+}
+
+.FavoriteBook,
+.UnFavoriteBook {
+  order: 2;
+}
+
+.GetByAuthor {
+  width: 80%;
+  margin: 2px;
+}
+
+.hidden {
+  display: none;
+}
+
+.Error {
+  background-color: #ff00008e;
+  color: var(--bg);
+}
+
+.Error:hover {
+  background-color: #ff0000b7;
+}
+
+.MessageContainer {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Poppins", sans-serif !important;
+  background-color: #ffffff;
+  border-radius: 25px;
+  width: 50%;
+  height: fit-content;
+  box-shadow: 0px 0px 10px 5px var(--box-shadow);
+  opacity: 0;
+  transition: all 0.5s ease-in;
+}
+
+.MessageContainer.Show {
+  opacity: 1;
+}
+
+.Message {
+  color: #000 !important;
+  font-size: 18px !important;
+  font-weight: bold;
+  font-family: "Poppins", sans-serif !important;
+}
