@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookshell</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/b466eb05ed.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <section class="NavBar">
+        <p>BookShell</p>
+        <button><i class="fa-solid fa-moon"></i></button>
+    </section>
+    <section id="AddBooksForm">
+        <div class="ButtonArea">
+            <button class="GetAll">All Books</button>
+            <button class="GetLibrary">Library</button>
+            <button class="GetWishList">Wishlist</button>
+            <button class="GetReaded">Readed</button>
+            <button class="GetUnreaded">Unreaded</button>
+            <button class="CreateAuthors">Authors</button>
+            <button class="GetFavorites">Favorites</button>
+            <button class="OpenSearch">Search</button>
+        </div>
+        <div class="SearchForm">
+            <p>Search A Book</p>
+            <div class="TypeOfSearch">
+                <button class="AuthorSearch">Author</button>
+                <button class="NameSearch SelectedS">Name</button>
+            </div>
+            <label for="SearchInput">
+                <p>Book Name:</p>
+            </label>
+            <input type="text" id="SearchInput" placeholder="Book Name" required>
+            <button class="SearchBy">Search</button>
+        </div>
+        <div class="Form Display">
+            <p class="FormTitle">Add A Book</p>
+            <label for="Name">
+                <p>Book Title:</p>
+            </label>
+            <input type="text" id="Name" placeholder="Title" required>
+            <label for="Author">
+                <p>Author Name:</p>
+            </label>
+            <input type="text" id="Author" placeholder="Author" required>
+            <div class="ReadOptions">
+                <p>Book Read Status</p>
+                <div class="ReadedOptions">
+                    <button class="Readed SelectedR">Readed</button>
+                    <button class="UnReaded">Unreaded</button>
+                </div>
+                <p class="hidden">Is Book In Wishlist?</p>
+                <div class="WishListOptions hidden">
+                    <button class="WishListTrue">True</button>
+                    <button class="WishListFalse SelectedW">False</button>
+                </div>
+            </div>
+            <button class="AddBook">Add</button>
+        </div>
+        <div class="Filter Display">
+            <label for="Filter">
+                <p>Filter Books</p>
+            </label>
+            <input type="text" id="Filter" placeholder="Filter By Name" required>
+        </div>
+    </section>
+    <section id="ViewBooksArea">
+        <div class="MessageContainer">
+            <p class="Message">Message</p>
+        </div>
+        <div class="Books"></div>
+    </section>
+
+    <script src="app.js" type="module"></script>
+</body>
+
+</html>
