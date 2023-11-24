@@ -12,7 +12,7 @@ def Book(book: dict) -> dict:
         return {}
     return {
         "name": book["name"],
-        "author": book["author"]
+        "author": book["author"],
     }
 
 
@@ -32,26 +32,8 @@ def BookFull(book: dict) -> dict:
         "name": book["name"],
         "author": book["author"],
         "isReaded": book["readed"],
-        "wishList": book["wishList"]
-    }
-
-
-def BookSemi(book: dict) -> dict:
-    """
-        ? Convert a book dictionary to a semi book dictionary.
-
-        Args:
-            * - book (dict): A dictionary representing a book.
-
-        Returns:
-            * - dict: A semi book dictionary with keys 'name', 'author', and 'isReaded'.
-    """
-    if not book:
-        return {}
-    return {
-        "name": book["name"],
-        "author": book["author"],
-        "isReaded": book["readed"],
+        "wishList": book["wishList"],
+        "favorite": book["favorite"] if "favorite" in book else False,
     }
 
 
@@ -66,19 +48,6 @@ def BookList(books: list) -> list:
             * - list: A list of simplified book dictionaries with keys 'name' and 'author'.
     """
     return [Book(book) for book in books]
-
-
-def BookSemiList(books: list) -> list:
-    """
-        ? Convert a list of book dictionaries to a list of semi book dictionaries.
-
-        Args:
-            * - books (list): A list of dictionaries representing books.
-
-        Returns:
-            * - list: A list of semi book dictionaries with keys 'name', 'author', and 'isReaded'.
-    """
-    return [BookSemi(book) for book in books]
 
 
 def Author(book: dict) -> str:
@@ -104,4 +73,8 @@ def Authors(books: list) -> list:
         Returns:
             * - list: A list of unique author names.
     """
-    return list(set([Author(book) for book in books]))
+    return sorted(list(set([Author(book) for book in books])))
+
+
+def BookFullList(books: list) -> list:
+    return [BookFull(book) for book in books]

@@ -19,8 +19,9 @@ from fastapi.middleware.cors import CORSMiddleware
 import db_manager
 from pydantic import BaseModel
 import urllib.parse
-from client import description, urls
+from client import description, get_allowed_origins
 from starlette.responses import RedirectResponse
+from fastapi import status, HTTPException
 
 """ 
     ? Configure the app and the CORS
@@ -28,7 +29,7 @@ from starlette.responses import RedirectResponse
 app = FastAPI(title="BookShell", description=description,
               summary="Personal library management API.", version="0.0.1",)
 
-origins = urls
+origins = get_allowed_origins()
 
 app.add_middleware(
     CORSMiddleware,
@@ -69,7 +70,7 @@ def root():
     return RedirectResponse(url="/docs")
 
 
-@app.get("/books", tags=["Library"])
+@app.get("/books", tags=["Library"], status_code=status.HTTP_200_OK)
 def root():
     """
         Retrieve a list of all books in the library.
@@ -77,10 +78,13 @@ def root():
         Returns:
             * List[dict]: A list of dictionaries, each representing a book with keys 'name' and 'author'.
     """
-    return db_manager.get_books()
+    books = db_manager.get_books()
+    if "message" in books:
+        raise HTTPException(status_code=404, detail="No books found")
+    return books
 
 
-@app.get("/books/wishlist", tags=["Library"])
+@app.get("/books/wishlist", tags=["Library"], status_code=status.HTTP_200_OK)
 def root():
     """
         Retrieve a list of books in the wishlist.
@@ -88,10 +92,13 @@ def root():
         Returns: 
             * List[dict]: A list of dictionaries, each representing a book in the wishlist with keys 'name' and 'author'.
     """
-    return db_manager.get_books_in_wishlist()
+    books = db_manager.get_books_in_wishlist()
+    if "message" in books:
+        raise HTTPException(status_code=404, detail="No books found")
+    return books
 
 
-@app.get("/books/library", tags=["Library"])
+@app.get("/books/library", tags=["Library"], status_code=status.HTTP_200_OK)
 def root():
     """
         Retrieve a list of books in the library (excluding wishlist books).
@@ -99,10 +106,13 @@ def root():
         Returns:
             * List[dict]: A list of dictionaries, each representing a book in the library with keys 'name', 'author', and 'isReaded'.
     """
-    return db_manager.get_books_in_library()
+    books = db_manager.get_books_in_library()
+    if "message" in books:
+        raise HTTPException(status_code=404, detail="No books found")
+    return books
 
 
-@app.get("/books/readed", tags=["Library"])
+@app.get("/books/readed", tags=["Library"], status_code=status.HTTP_200_OK)
 def root():
     """
         Retrieve a list of readed books.
@@ -110,10 +120,13 @@ def root():
         Returns:
             * List[dict]: A list of dictionaries, each representing a readed book with keys 'name' and 'author'.
     """
-    return db_manager.get_readed_books()
+    books = db_manager.get_readed_books()
+    if "message" in books:
+        raise HTTPException(status_code=404, detail="No books found")
+    return books
 
 
-@app.get("/books/unreaded", tags=["Library"])
+@app.get("/books/unreaded", tags=["Library"], status_code=status.HTTP_200_OK)
 def root():
     """
         Retrieve a list of books to read (unreaded books).
@@ -121,10 +134,13 @@ def root():
         Returns:
             * List[dict]: A list of dictionaries, each representing an unreaded book with keys 'name' and 'author'.
     """
-    return db_manager.get_books_to_read()
+    books = db_manager.get_books_to_read()
+    if "message" in books:
+        raise HTTPException(status_code=404, detail="No books found")
+    return books
 
 
-@app.get("/books/authors", tags=["Library"])
+@app.get("/books/authors", tags=["Library"], status_code=status.HTTP_200_OK)
 def root():
     """
         Retrieve a list of unique authors from the library.
@@ -132,10 +148,13 @@ def root():
         Returns:
             * List[str]: A list of unique author names.
     """
-    return db_manager.get_authors()
+    authors = db_manager.get_authors()
+    if "message" in authors:
+        raise HTTPException(status_code=404, detail="No authors found")
+    return authors
 
 
-@app.get("/books/favorites", tags=["Library"])
+@app.get("/books/favorites", tags=["Library"], status_code=status.HTTP_200_OK)
 def root():
     """
         Retrieve a list of favorite books.
@@ -143,10 +162,13 @@ def root():
         Returns:
             * List[dict]: A list of dictionaries, each representing a favorite book with keys 'name' and 'author'.
     """
-    return db_manager.get_favorites()
+    books = db_manager.get_favorites()
+    if "message" in books:
+        raise HTTPException(status_code=404, detail="No books found")
+    return books
 
 
-@app.get("/books/{name}", tags=["Library"])
+@app.get("/books/{name}", tags=["Library"], status_code=status.HTTP_200_OK)
 def root(name: str):
     """
         Retrieve a book by name.
@@ -158,10 +180,13 @@ def root(name: str):
             * dict: A dictionary representing the book with keys 'name', 'author', 'readed', 'wishList', and 'favorite'.
     """
     name = urllib.parse.unquote(name)
-    return db_manager.get_book(name)
+    book = db_manager.get_book(name)
+    if "message" in book:
+        raise HTTPException(status_code=404, detail="Book not found")
+    return book
 
 
-@app.get("/books/author/{author}", tags=["Library"])
+@app.get("/books/author/{author}", tags=["Library"], status_code=status.HTTP_200_OK)
 def root(author: str):
     """
         Retrieve a list of books by a specific author.
@@ -172,7 +197,13 @@ def root(author: str):
         Returns:
             * List[dict]: A list of dictionaries, each representing a book by the specified author with keys 'name', 'author', and 'isReaded'.
     """
-    return db_manager.get_books_by_author(author)
+    books = db_manager.get_books_by_author(author)
+    if "message" in books:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No books found by this author"
+        )
+    return books
 
 
 @app.post("/books", tags=["Library"], status_code=status.HTTP_201_CREATED)
@@ -190,7 +221,7 @@ def root(book: Book):
     return result
 
 
-@app.delete("/books/{name}", tags=["Library"])
+@app.delete("/books/{name}", tags=["Library"], status_code=status.HTTP_202_ACCEPTED)
 def root(name: str):
     """
         Delete a book from the library by name.
@@ -205,7 +236,7 @@ def root(name: str):
     return result
 
 
-@app.put("/books/wishlist/{name}", tags=["Library"])
+@app.put("/books/wishlist/{name}", tags=["Library"], status_code=status.HTTP_202_ACCEPTED)
 def root(name: str):
     """
         Remove a book from the wishlist by name.
@@ -220,7 +251,7 @@ def root(name: str):
     return result
 
 
-@app.put("/books/favorites/{name}", tags=["Library"])
+@app.put("/books/favorites/{name}", tags=["Library"], status_code=status.HTTP_202_ACCEPTED)
 def root(name: str):
     """
         Mark a book as a favorite by name.
@@ -235,7 +266,7 @@ def root(name: str):
     return result
 
 
-@app.put("/books/{name}", tags=["Library"])
+@app.put("/books/{name}", tags=["Library"], status_code=status.HTTP_202_ACCEPTED)
 def root(name: str):
     """
         Mark a book as readed by name.
@@ -248,3 +279,18 @@ def root(name: str):
     """
     result = db_manager.read_a_book(name)
     return result
+
+
+@app.put("/books/unread/{name}", tags=["Library"], status_code=status.HTTP_202_ACCEPTED)
+def root(name: str):
+    return db_manager.unread_a_book(name)
+
+
+@app.put("/books/unfavorite/{name}", tags=["Library"], status_code=status.HTTP_202_ACCEPTED)
+def root(name: str):
+    return db_manager.unfavorite_a_book(name)
+
+
+@app.put("/books/intowishlist/{name}", tags=["Library"], status_code=status.HTTP_202_ACCEPTED)
+def root(name: str):
+    return db_manager.into_wishlist_a_book(name)

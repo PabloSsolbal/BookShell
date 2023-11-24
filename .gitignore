@@ -7,3 +7,4 @@ Spacefile
 .space
 venv
 __init__.py
+*.cmd
